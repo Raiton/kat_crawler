@@ -8,3 +8,6 @@ kat_crawler
 - kat.tar.gz : compressed crawler
 - kat_crawler_app.py : application that user gtk+ to throw an app indicator and a menu
 - kat_crawer_app_backup.py : backup
+
+<h1>To Do List </h1>
+- [ ] Set automatic download for a list of given tv shows 
