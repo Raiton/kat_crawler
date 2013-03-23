@@ -9,7 +9,7 @@ import re
 #notify-send "Test" "kill" -i /usr/share/icons/hicolor/scalable/devices/deja-dup-cloud.svg
 now = datetime.datetime.now()
 TIME_REFRESH_MINUTES=30
-LIST_OF_FAVORITES ="Game of thrones|The Big Bang Theory|how i met your mother|hells kitchen"
+LIST_OF_FAVORITES ="Game of thrones|The Big Bang Theory|how i met your mother"
 regex = re.compile(LIST_OF_FAVORITES,re.IGNORECASE)
 Last_Update=now.strftime("%d-%m-%Y %H:%M:%S")
 def download_torrent(name,url):
