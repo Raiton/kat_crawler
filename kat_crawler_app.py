@@ -5,19 +5,27 @@ import lxml.etree
 import os
 from gi.repository import GLib
 import datetime
+import re
 #notify-send "Test" "kill" -i /usr/share/icons/hicolor/scalable/devices/deja-dup-cloud.svg
 now = datetime.datetime.now()
-
 TIME_REFRESH_MINUTES=30
+LIST_OF_FAVORITES ="Game of thrones|The Big Bang Theory|how i met your mother|hells kitchen"
+regex = re.compile(LIST_OF_FAVORITES,re.IGNORECASE)
 Last_Update=now.strftime("%d-%m-%Y %H:%M:%S")
 def download_torrent(name,url):
   torrent_name=name.replace(" ","_")
   torrent_url='https:'+url
   command_str='cd /home/raiton/;'
-  command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz &&'
+  command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz --quiet &&'
   command_str+='gzip -d '+torrent_name+'.torrent.gz &&'
   command_str+='nohup transmission-gtk '+torrent_name+'.torrent &'
   os.system(command_str)
+def check_listoffavorites(name,url):
+  d=regex.findall(name)
+  if d!=[]:
+    download_torrent(name,url)
+
+
 def menuitem_response(w, buf,url):
   if buf=='Quit':
     Gtk.main_quit()
@@ -66,6 +74,7 @@ def perform():
   for entry in entries:
     url_path= entry.xpath("./../../url/value/text()")[0]
     buf = entry.text
+    check_listoffavorites(buf,url_path)
     menu_items = Gtk.MenuItem(buf)
     menu.append(menu_items)
 
