@@ -5,17 +5,25 @@ import lxml.etree
 import os
 from gi.repository import GLib
 import datetime
-
+#notify-send "Test" "kill" -i /usr/share/icons/hicolor/scalable/devices/deja-dup-cloud.svg
 now = datetime.datetime.now()
 
 TIME_REFRESH_MINUTES=30
 Last_Update=now.strftime("%d-%m-%Y %H:%M:%S")
-def menuitem_response(w, buf):
+def menuitem_response(w, buf,url):
   if buf=='Quit':
     Gtk.main_quit()
   elif buf=='Refresh':
     perform()
     Gtk.main_quit()
+  else:
+    torrent_name=buf.replace(" ","_")
+    torrent_url='https:'+url
+    command_str='cd /home/raiton/;'
+    command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz &&'
+    command_str+='gzip -d '+torrent_name+'.torrent.gz &&'
+    command_str+='nohup transmission-gtk '+torrent_name+'.torrent &'
+    os.system(command_str)
 def timer_passed():
   perform()
   return True
@@ -48,19 +56,20 @@ def perform():
   name_refresh_menu='Refresh ['+Last_Update+' ]'
   menu_items = Gtk.MenuItem(name_refresh_menu)
   menu.append(menu_items)
-  menu_items.connect("activate", menuitem_response, 'Refresh')
+  menu_items.connect("activate", menuitem_response, 'Refresh','')
   menu_items.show()
   #end Refresh part
 
   # create some
   for entry in entries:
+    url_path= entry.xpath("./../../url/value/text()")[0]
     buf = entry.text
     menu_items = Gtk.MenuItem(buf)
     menu.append(menu_items)
 
     # this is where you would connect your menu item up with a function:
  
-    menu_items.connect("activate", menuitem_response, buf)
+    menu_items.connect("activate", menuitem_response, buf,url_path)
  
     # show the items
     menu_items.show()
@@ -75,7 +84,7 @@ def perform():
 
 
   menu.append(menu_items)
-  menu_items.connect("activate", menuitem_response, 'Quit')
+  menu_items.connect("activate", menuitem_response, 'Quit','')
   menu_items.show()
   #end quit part
 
