@@ -10,5 +10,5 @@ kat_crawler
 - kat_crawer_app_backup.py : backup
 
 <h1>To Do List </h1>
-- [ ] Set automatic download for a list of given tv shows 
+- [X] Set automatic download for a list of given tv shows 
 - [ ] Add icon change color when new updates arrives
