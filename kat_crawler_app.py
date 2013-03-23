@@ -10,6 +10,14 @@ now = datetime.datetime.now()
 
 TIME_REFRESH_MINUTES=30
 Last_Update=now.strftime("%d-%m-%Y %H:%M:%S")
+def download_torrent(name,url):
+  torrent_name=name.replace(" ","_")
+  torrent_url='https:'+url
+  command_str='cd /home/raiton/;'
+  command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz &&'
+  command_str+='gzip -d '+torrent_name+'.torrent.gz &&'
+  command_str+='nohup transmission-gtk '+torrent_name+'.torrent &'
+  os.system(command_str)
 def menuitem_response(w, buf,url):
   if buf=='Quit':
     Gtk.main_quit()
@@ -17,13 +25,7 @@ def menuitem_response(w, buf,url):
     perform()
     Gtk.main_quit()
   else:
-    torrent_name=buf.replace(" ","_")
-    torrent_url='https:'+url
-    command_str='cd /home/raiton/;'
-    command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz &&'
-    command_str+='gzip -d '+torrent_name+'.torrent.gz &&'
-    command_str+='nohup transmission-gtk '+torrent_name+'.torrent &'
-    os.system(command_str)
+    download_torrent(buf,url)
 def timer_passed():
   perform()
   return True
