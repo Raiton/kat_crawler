@@ -9,14 +9,14 @@ import re
 #notify-send "Test" "kill" -i /usr/share/icons/hicolor/scalable/devices/deja-dup-cloud.svg
 now = datetime.datetime.now()
 TIME_REFRESH_MINUTES=30
-LIST_OF_FAVORITES ="Game of thrones|The Big Bang Theory|how i met your mother"
+LIST_OF_FAVORITES ="Game of thrones|The Big Bang Theory|how i met your mother|Dexter"
 regex = re.compile(LIST_OF_FAVORITES,re.IGNORECASE)
 Last_Update=now.strftime("%d-%m-%Y %H:%M:%S")
 def download_torrent(name,url):
   torrent_name=name.replace(" ","_")
-  torrent_url='https:'+url
+  torrent_url=url
   command_str='cd /home/raiton/;'
-  command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz --quiet &&'
+  command_str+='wget '+torrent_url+' -O '+torrent_name+'.torrent.gz &&'
   command_str+='gzip -d '+torrent_name+'.torrent.gz &&'
   command_str+='nohup transmission-gtk '+torrent_name+'.torrent &'
   os.system(command_str)
@@ -44,7 +44,7 @@ def perform():
 
   if os.path.exists('/home/raiton/kat/kat_last_tv_shows.xml'):
     os.system('cd /home/raiton/kat;mv kat_last_tv_shows.xml kat_last_tv_shows.xml.backup')
-  os.system('cd /home/raiton/kat;timeout 5 scrapy crawl kat_crawler --nolog  -o kat_last_tv_shows.xml -t xml')
+  os.system('cd /home/raiton/kat;timeout 5 scrapy crawl kat_crawler -o kat_last_tv_shows.xml -t xml')
     
   try:
     tree=lxml.etree.parse('/home/raiton/kat/kat_last_tv_shows.xml')
@@ -70,8 +70,8 @@ def perform():
   menu_items.show()
   #end Refresh part
 
-  # create some
-  for entry in entries:
+  # create list of entries for the menu
+  for entry in reversed(entries):
     url_path= entry.xpath("./../../url/value/text()")[0]
     buf = entry.text
     check_listoffavorites(buf,url_path)
